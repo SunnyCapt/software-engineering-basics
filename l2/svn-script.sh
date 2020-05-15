@@ -18,14 +18,14 @@ loadAndCommit() {
 	echo "[INFO] load r$1 [$2]";
 	
 	set -f;
-	conflictedFiles=`svn status | egrep '(^.+C)|(^C.*)'  | tr -d ' C'`;
+	conflictedFiles=`svn status | egrep '(^.+C +.*)|(^C +.*)'  | tr -d ' \t' | cut -c 2-`;
 
 	while [[ $conflictedFiles ]]; do
 		echo "[INFO] try to auto resolve conflicts";
 		for file in $conflictedFiles; do
 			svn resolve $file --accept=working; 
 		done;
-		conflictedFiles=`svn status | egrep '(^.+C)|(^C.*)'  | tr -d ' C'`;
+		conflictedFiles=`svn status | egrep '(^.+C +.*)|(^C +.*)'  | tr -d ' \t' | cut -c 2-`;
 	done;
 	
 	set +f;
