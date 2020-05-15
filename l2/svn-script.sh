@@ -42,7 +42,7 @@ loadAndCommit() {
 
 	for file in `ls`; do
 		if ! [[ -f $sourcePath/r$1/$file ]]; then
-			rm $file;
+			svn rm $file;
 		fi
 	done;
 
