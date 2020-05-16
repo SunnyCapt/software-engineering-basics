@@ -62,7 +62,7 @@ public class ReplaceMojo extends AbstractMojo {
                     getLog().error(e);
                 }
             } else if (file.isDirectory())
-                replaceWordsInDirFiles(path);
+                replaceWordsInDirFiles(Paths.get(file.getPath()));
         }
     }
 
