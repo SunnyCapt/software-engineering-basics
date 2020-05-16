@@ -9,6 +9,14 @@ repositoryFullPath=$svnRepoDir/$repositoryName;
 projectWCPath=$repositoryName/$projectName;
 initStructurePath=$svnRepoDir/$projectName
 
+parse_conflicted_files() { 
+	while read line; do 
+		if [[ $line =~ ^\!?\ *C\ *(.*)$ ]]; then 
+			echo ${BASH_REMATCH[1]}; 
+		fi; 
+	done;
+}
+
 clearWorkDir() {
 	echo "[INFO] clear dirs";
 	rm -rf $repositoryFullPath $projectWCPath $initStructurePath 2>/dev/null;
@@ -18,14 +26,14 @@ loadAndCommit() {
 	echo "[INFO] load r$1 [$2]";
 	
 	set -f;
-	conflictedFiles=`svn status | egrep '(^.+C)|(^C.*)'  | tr -d ' C'`;
+	conflictedFiles=`svn status | parse_conflicted_files`;
 
 	while [[ $conflictedFiles ]]; do
 		echo "[INFO] try to auto resolve conflicts";
 		for file in $conflictedFiles; do
 			svn resolve $file --accept=working; 
 		done;
-		conflictedFiles=`svn status | egrep '(^.+C)|(^C.*)'  | tr -d ' C'`;
+		conflictedFiles=`svn status | parse_conflicted_files`;
 	done;
 	
 	set +f;
@@ -34,7 +42,7 @@ loadAndCommit() {
 
 	for file in `ls`; do
 		if ! [[ -f $sourcePath/r$1/$file ]]; then
-			rm $file;
+			svn rm $file;
 		fi
 	done;
 
