@@ -10,7 +10,7 @@
 
   - add into  project.build.plugins of your project pom.xml:
    
-   
+   ```
      <plugin>
          <groupId>capt.sunny</groupId>
          <artifactId>replace-plugin</artifactId>
@@ -23,6 +23,6 @@
              <resultWord>write maven plugin</resultWord>
          </configuration>
      </plugin>
-     
+   ```  
      
   - run `mvn replace:run`
